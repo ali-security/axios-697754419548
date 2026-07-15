@@ -1,15 +1,13 @@
-name: 'Close Stale'
+name: Close Stale
 
 on:
-  schedule:
-    - cron: '0 0 * * 1'
-
+  workflow_dispatch:
 jobs:
   stale:
     permissions:
       issues: write  # for actions/stale to close stale issues
       pull-requests: write  # for actions/stale to close stale PRs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Close Stale Issues
         uses: actions/stale@v7
@@ -27,8 +25,8 @@ jobs:
             This pull request is being automatically marked as stale because it has not been updated in a while. Please confirm that the issue is still present and reproducible. If no updates or new comments are received the pull request will be closed in a few days.
 
             Thanks.
-          stale-issue-label: 'status:stale'
-          stale-pr-label: 'status:stale'
-          only-labels: 'status:more info needed'
+          stale-issue-label: status:stale
+          stale-pr-label: status:stale
+          only-labels: status:more info needed
           days-before-stale: 30
-          days-before-close: 14 
+          days-before-close: 14

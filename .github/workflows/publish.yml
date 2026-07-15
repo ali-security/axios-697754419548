@@ -5,17 +5,17 @@ on:
       - closed
     branches:
       - main
-      - 'v**'
+      - v**
   workflow_dispatch:
 jobs:
   publish:
     if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && github.event.pull_request.head.label == 'axios:release')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       id-token: write
     steps:
-      - name: "Release PR info"
+      - name: Release PR info
         if: github.event_name != 'workflow_dispatch'
         run: echo "PR ${{ github.event.number }}"
       - uses: actions/checkout@v3
@@ -37,21 +37,21 @@ jobs:
       - name: Check versions
         run: node ./bin/check-build-version.js
       ############# TAG RELEASE ##############
-      - name: "Push tag v${{ steps.package-version.outputs.current-version }}"
+      - name: Push tag v${{ steps.package-version.outputs.current-version }}
         uses: rickstaa/action-create-tag@v1
         id: tag_version
         with:
-          tag: "v${{ steps.package-version.outputs.current-version }}"
+          tag: v${{ steps.package-version.outputs.current-version }}
       ############# RESOLVE NPM TAG ##############
       - name: NPM TAG
-        id: 'npm_tag'
+        id: npm_tag
         run: node ./bin/resolveNPMTag.js
       ############# GITHUB RELEASE ##############
-      - name: "Create a GitHub release v${{ steps.package-version.outputs.current-version }}"
+      - name: Create a GitHub release v${{ steps.package-version.outputs.current-version }}
         uses: ncipollo/release-action@v1
         with:
-          tag: "v${{ steps.package-version.outputs.current-version }}"
-          name: "Release v${{ steps.package-version.outputs.current-version }}"
+          tag: v${{ steps.package-version.outputs.current-version }}
+          name: Release v${{ steps.package-version.outputs.current-version }}
           body: |
             ## Release notes:
             ${{ steps.extract-release-notes.outputs.release_notes }}
@@ -62,7 +62,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
   notify:
     needs: [publish]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
         with:
