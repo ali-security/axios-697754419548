@@ -1,5 +1,3 @@
-import AxiosHeaders from "../../lib/core/AxiosHeaders.js";
-
 describe('options', function () {
   beforeEach(function () {
     jasmine.Ajax.install();
@@ -63,8 +61,7 @@ describe('options', function () {
       baseURL: 'http://test.com/'
     });
 
-    instance.get('/foo');
-
+    instance.get('/foo')
     getAjaxRequest().then(function (request) {
       expect(request.url).toBe('http://test.com/foo');
       done();
@@ -82,6 +79,21 @@ describe('options', function () {
       expect(request.url).toBe('http://someotherurl.com/');
       done();
     });
+  });
+
+  it('should combine the URLs if base url and request url exist and allowAbsoluteUrls is false', function (done) {
+    const instance = axios.create({
+      baseURL: 'http://someurl.com/',
+      allowAbsoluteUrls: false
+    });
+
+    instance.get('http://someotherurl.com/');
+
+    getAjaxRequest().then(function (request) {
+      expect(request.url).toBe('http://someurl.com/http://someotherurl.com/');
+      done();
+    });
+
   });
 
   it('should change only the baseURL of the specified instance', function() {

@@ -60,6 +60,7 @@
     "release:beta": "release-it --preRelease=beta",
     "release:no-npm": "release-it --no-npm",
     "release:changelog:fix": "node ./bin/injectContributorsList.js && git add CHANGELOG.md",
+    "prepack": "npm run build",
     "release": "release-it"
   },
   "repository": {
